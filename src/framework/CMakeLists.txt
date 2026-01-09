@@ -234,6 +234,13 @@ if(NOT WASM)
     set(REQUIRED_BOOST_COMPONENTS system filesystem)
     set(Boost_USE_MULTITHREADED ON)
     set(Boost_USE_STATIC_LIBS ${USE_STATIC_LIBS})
+    if(DEFINED VCPKG_INSTALLED_DIR AND DEFINED VCPKG_TARGET_TRIPLET AND NOT DEFINED BOOST_ROOT)
+        set(_vcpkg_boost_root "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}")
+        if(EXISTS "${_vcpkg_boost_root}/include/boost/version.hpp")
+            set(BOOST_ROOT "${_vcpkg_boost_root}")
+            set(Boost_NO_SYSTEM_PATHS ON)
+        endif()
+    endif()
     find_package(Boost 1.67.0 COMPONENTS ${REQUIRED_BOOST_COMPONENTS} REQUIRED)
 
     #find zip
@@ -594,4 +601,3 @@ endif()
 
 include_directories(${framework_INCLUDE_DIRS})
 add_definitions(${framework_DEFINITIONS})
-
