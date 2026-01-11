@@ -31,6 +31,19 @@
 
 int main(int argc, const char* argv[]) {
     std::vector<std::string> args(argv, argv + argc);
+    std::string userDataDir;
+    const std::string userDirPrefix = "--user-data-dir=";
+    for (size_t i = 1; i < args.size(); ++i) {
+        const std::string& arg = args[i];
+        if (arg == "--user-data-dir" && i + 1 < args.size()) {
+            userDataDir = args[i + 1];
+            break;
+        }
+        if (arg.rfind(userDirPrefix, 0) == 0) {
+            userDataDir = arg.substr(userDirPrefix.size());
+            break;
+        }
+    }
 
 #ifdef CRASH_HANDLER
     installCrashHandler();
@@ -73,7 +86,7 @@ int main(int argc, const char* argv[]) {
     }
 
     // find script init.lua and run it
-    g_resources.setupWriteDir(g_app.getName(), g_app.getCompactName());
+    g_resources.setupWriteDir(g_app.getName(), g_app.getCompactName(), userDataDir);
     g_resources.setup();
 
     if (!g_lua.safeRunScript("init.lua")) {

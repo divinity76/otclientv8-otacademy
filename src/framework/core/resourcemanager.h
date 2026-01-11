@@ -35,7 +35,7 @@ public:
     void terminate();
 
     bool launchCorrect(const std::string& product, const std::string& app);
-    bool setupWriteDir(const std::string& product, const std::string& app);
+    bool setupWriteDir(const std::string& product, const std::string& app, const std::string& overridePath = "");
     bool setup();
 
     std::string getCompactName();

@@ -141,11 +141,22 @@ bool ResourceManager::launchCorrect(const std::string& product, const std::strin
 #endif
 }
 
-bool ResourceManager::setupWriteDir(const std::string& product, const std::string& app) {
+bool ResourceManager::setupWriteDir(const std::string& product, const std::string& app, const std::string& overridePath) {
 #ifdef ANDROID
     const char* localDir = g_androidState->activity->internalDataPath;
+    (void)overridePath;
 #else
-    const char* localDir = PHYSFS_getPrefDir(product.c_str(), app.c_str());
+    const char* localDir = nullptr;
+    std::string path = overridePath;
+    if (!path.empty()) {
+        // PhysFS expects utf8 paths; replace backslashes to keep mounts consistent
+        std::replace(path.begin(), path.end(), '\\', '/');
+        std::error_code ec;
+        std::filesystem::create_directories(path, ec);
+        localDir = path.c_str();
+    } else {
+        localDir = PHYSFS_getPrefDir(product.c_str(), app.c_str());
+    }
 #endif
 
     if (!localDir) {
