@@ -23,7 +23,7 @@ Use Visual Studio 2022, select backend (OpenGL, DirectX), platform (x86, x64) an
 
 If you have **minimal** step by step guide for different distro, please feel free to add it below for others!
 
-### Ubuntu 22.04
+### Ubuntu 22.04 / 24.04
 
 ```
 sudo apt update
@@ -32,11 +32,14 @@ cd ~
 git clone https://github.com/microsoft/vcpkg.git
 cd vcpkg && ./bootstrap-vcpkg.sh && cd ..
 git clone https://github.com/OTAcademy/otclientv8.git
-cd otclientv8 && mkdir build && cd build
+cd otclientv8
+~/vcpkg/vcpkg install
+mkdir build && cd build
 cmake -DCMAKE_TOOLCHAIN_FILE=~/vcpkg/scripts/buildsystems/vcpkg.cmake .. && make -j$(nproc)
 cp otclient ../otclient && cd ..
 ./otclient
 ```
+
 
 ### Android
 
